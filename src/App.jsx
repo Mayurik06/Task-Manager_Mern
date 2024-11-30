@@ -1,20 +1,22 @@
-import React from 'react'
-import Header from './components/Header'
-import Sidebar from './components/Sidebar'
-import { BrowserRouter } from 'react-router-dom'
-import Sidebar2 from './components/Sidebar2'
+import React from "react";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AdminRoutes from "./routes/AdminRoutes";
+import UserRoutes from "./routes/UserRoutes";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
-   <BrowserRouter>
-    {/* <Sidebar/> */}
-    <Sidebar2>
-    <Header heading="Dashboard"/>
-      Home page
-      
-    </Sidebar2>
-   </BrowserRouter>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="*" element={<NotFound/>}/>
+        <Route path="/user/*" element={<UserRoutes />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
