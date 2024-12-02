@@ -4,27 +4,28 @@ import { AiOutlineDashboard } from "react-icons/ai";
 import { IoPeople } from "react-icons/io5";
 import { BiTask } from "react-icons/bi";
 import { LiaEnvelopeOpenSolid } from "react-icons/lia";
+import { Link } from "react-router-dom";
 
 function Sidebar({children,role}) {
  
   const AdminMenus = [
     {
       title: "Dashboard",
-      src: "/admindashboard",
+      src: "/admin/dashboard",
       icon: <AiOutlineDashboard />,
     },
-    { title: "Add Employee", src: "/createEmployee", icon: <IoPeople /> },
-    { title: "Assign Tasks", src: "/assigntask", icon: <BiTask /> },
+    { title: "Add Employee", src: "/admin/add-user", icon: <IoPeople /> },
+    { title: "Assign Tasks", src: "/admin/assign-task", icon: <BiTask /> },
     {
       title: "Leave Management",
-      src: "/leavemanagement",
+      src: "/admin/leave-management",
       icon: <LiaEnvelopeOpenSolid />,
     },
   ];
   const EmployeeMenus = [
-    { title: "Dashboard", src: "/dashboard", icon: <AiOutlineDashboard /> },
-    { title: "Your Tasks", src: "/Task", icon: <BiTask /> },
-    { title: "Apply Leave", src: "/leaves", icon: <LiaEnvelopeOpenSolid /> },
+    { title: "Dashboard", src: "/user/dashboard", icon: <AiOutlineDashboard /> },
+    { title: "Your Tasks", src: "/user/tasks", icon: <BiTask /> },
+    { title: "Apply Leave", src: "/user/apply-leave", icon: <LiaEnvelopeOpenSolid /> },
   ];
   const menus = role === "admin" ? AdminMenus : EmployeeMenus;
 
@@ -43,10 +44,12 @@ function Sidebar({children,role}) {
               key={index}
               className="cursor-pointer hover:bg-gray-200 px-2 lg:py-4 py-2 rounded-md lg:w-full"
             >
-              <div className="flex items-center gap-4">
+             <Link to={menu.src}>
+             <div className="flex items-center gap-4">
                 <span className="text-3xl">{menu.icon}</span>
                  <span className="hidden lg:block">{menu.title}</span>
               </div>
+             </Link>
             </li>
           ))}
         </ul>
