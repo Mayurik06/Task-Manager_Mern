@@ -6,6 +6,7 @@ import LeaveManagement from "../pages/admin/LeaveManagement";
 import AssignTask from "../pages/admin/AssignTask";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
+import ViewEmployee from "../pages/admin/ViewEmployee";
 
 function AdminRoutes() {
   const location = useLocation();
@@ -31,12 +32,16 @@ function AdminRoutes() {
   return (
     <Sidebar role="admin">
       <Header heading={heading} />
-      <Routes>
+     <div className="mt-16 lg:mt-20 mb-20 lg:mb-0">
+     <Routes>
         <Route path="/dashboard" element={<AdminDashboard />} />
         <Route path="/add-user" element={<AddUser />} />
         <Route path="/leave-management" element={<LeaveManagement />} />
         <Route path="/assign-task" element={<AssignTask />} />
+        <Route path="/get-user" element={<ViewEmployee/>} />
+
       </Routes>
+     </div>
     </Sidebar>
   );
 }

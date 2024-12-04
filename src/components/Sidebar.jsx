@@ -6,8 +6,7 @@ import { BiTask } from "react-icons/bi";
 import { LiaEnvelopeOpenSolid } from "react-icons/lia";
 import { Link } from "react-router-dom";
 
-function Sidebar({children,role}) {
- 
+function Sidebar({ children, role }) {
   const AdminMenus = [
     {
       title: "Dashboard",
@@ -23,14 +22,22 @@ function Sidebar({children,role}) {
     },
   ];
   const EmployeeMenus = [
-    { title: "Dashboard", src: "/user/dashboard", icon: <AiOutlineDashboard /> },
+    {
+      title: "Dashboard",
+      src: "/user/dashboard",
+      icon: <AiOutlineDashboard />,
+    },
     { title: "Your Tasks", src: "/user/tasks", icon: <BiTask /> },
-    { title: "Apply Leave", src: "/user/apply-leave", icon: <LiaEnvelopeOpenSolid /> },
+    {
+      title: "Apply Leave",
+      src: "/user/apply-leave",
+      icon: <LiaEnvelopeOpenSolid />,
+    },
   ];
   const menus = role === "admin" ? AdminMenus : EmployeeMenus;
 
   return (
-    <div className="flex ">
+    <div className="flex relative">
       <div className="lg:h-screen lg:w-64 w-full lg:p-5 p-4 lg:pt-8 fixed bottom-0 lg:left-0 lg:top-0 lg:shadow-right shadow-top rounded-lg lg:rounded-none bg-white">
         <div
           className={`lg:flex gap-x-4 items-center justify-start p-2 duration-200 hidden border-b`}
@@ -40,17 +47,18 @@ function Sidebar({children,role}) {
         </div>
         <ul className="flex lg:flex-col items-center justify-evenly lg:items-start lg:pt-4">
           {menus.map((menu, index) => (
-            <li
-              key={index}
-              className="cursor-pointer hover:bg-gray-200 px-2 lg:py-4 py-2 rounded-md lg:w-full"
-            >
-             <Link to={menu.src}>
-             <div className="flex items-center gap-4">
-                <span className="text-3xl">{menu.icon}</span>
-                 <span className="hidden lg:block">{menu.title}</span>
-              </div>
-             </Link>
-            </li>
+            <Link to={menu.src} className="w-full"  key={index}>
+              <li
+                className="cursor-pointer hover:bg-gray-200 px-2 lg:py-4 py-2 rounded-md lg:w-full"
+              >
+                <div className="flex flex-col lg:flex-row items-center lg:gap-4">
+                  <span className="text-3xl">{menu.icon}</span>
+                  <span className="text-[10px] text-center lg:text-left lg:text-[16px]">
+                    {menu.title}
+                  </span>
+                </div>
+              </li>
+            </Link>
           ))}
         </ul>
       </div>

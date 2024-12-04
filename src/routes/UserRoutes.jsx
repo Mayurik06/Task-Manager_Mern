@@ -30,11 +30,13 @@ function UserRoutes() {
   return (
     <Sidebar role="user">
       <Header heading={heading} />
+      <div className="mt-16 lg:mt-20">
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tasks" element={<Task />} />
         <Route path="/apply-leave" element={<Leave />} />
       </Routes>
+      </div>
     </Sidebar>
   );
 }
