@@ -1,19 +1,27 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { IoIosSearch } from "react-icons/io";
-import { Link } from "react-router-dom";
-import { RiDeleteBin5Fill } from "react-icons/ri";
-import { FaRegEdit } from "react-icons/fa";
+import UserTable from "../../components/UserTable";
+import UserGrid from "../../components/UserGrid";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import DeleteUser from "../../components/DeleteUserf";
 
 function ViewEmployee() {
   const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const itemsPerPage = 5; // Number of items per page
 
   useEffect(() => {
     const getEmployee = async () => {
       try {
         const response = await axios.get("http://localhost:4000/api/get/user");
         setUsers(response.data.users);
-        console.log(users);
       } catch (error) {
         console.log("error", error);
       }
@@ -21,72 +29,96 @@ function ViewEmployee() {
     getEmployee();
   }, []);
 
+  const filterUser = users.filter(
+    (user) =>
+      user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.aliasEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.role?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filterUser.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentUsers = filterUser.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  const handleDeleteClick = (id) => {
+    setSelectedUserId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/api/delete/user/${selectedUserId}`
+      );
+      if (response.status === 200) {
+        toast.success("User deleted successfully");
+        setUsers((prevUsers) =>
+          prevUsers.filter((user) => user._id !== selectedUserId)
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user. Please try again.");
+    } finally {
+      setIsModalOpen(false);
+      setSelectedUserId(null);
+    }
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedUserId(null);
+  };
+
   return (
-    <div className="container mx-auto px-4">
+    <div className="mx-auto px-4 z-10">
+      <ToastContainer />
       <div className="mb-4">
-        <div className="flex items-center border-b w-full lg:w-[300px]">
+        {/* Search Input */}
+        <div className="flex items-center border-b w-full lg:w-[300px] mb-4">
           <IoIosSearch size={26} className="text-gray-400" />
           <input
             type="text"
             placeholder="Search"
             className="px-4 py-2 outline-none bg-transparent"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
           />
         </div>
 
+        {/* Responsive User Data Display */}
         <div className="overflow-x-auto">
-          {users ? (
-            <table className="min-w-full border border-gary-300">
-              <caption className="p-4 font-semibold text-lg text-gray-700">
-                Employee Information and Performance Tracking
-              </caption>
+          {/* Table for Large Screens */}
+          <div className="hidden md:block">
+            <UserTable user={currentUsers} ondelete={handleDeleteClick} />
+          </div>
 
-              <thead className="bg-gary-100">
-                <tr className="bg-black text-white">
-                  <td className="py-2 px-4 border-b text-left">Name</td>
-                  <td className="py-2 px-4 border-b text-left">Position</td>
-                  <td className="py-2 px-4 border-b text-left">Work ID</td>
-                  <td className="py-2 px-4 border-b text-left">Role</td>
-                  <td className="py-2 px-4 border-b text-left">
-                    Track Performance
-                  </td>
-                  <td className="py-2 px-4 border-b text-left"></td>
-                  <td className="py-2 px-4 border-b text-left"></td>
-                </tr>
-              </thead>
+          <div className="flex flex-col gap-4 md:hidden">
+            <UserGrid user={filterUser} ondelete={handleDeleteClick} />
+          </div>
+        </div>
 
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user._id}>
-                    <td className="py-2 px-4 border-b">{user.name}</td>
-                    <td className="py-2 px-4 border-b">{user.position}</td>
-                    <td className="py-2 px-4 border-b">{user.aliasEmail}</td>
-                    <td className="py-2 px-4 border-b">{user.role}</td>
-                    <td className="py-2 px-4 border-b">
-                      <Link to={`/${user._id}`}>
-                        <button className="text-white bg-black px-4 py-2 font-bold rounded-sm">
-                          Track Performance
-                        </button>
-                      </Link>
-                    </td>
-                    <td>
-                    <Link to={`/${user._id}`}>
-                      <RiDeleteBin5Fill size={26}/>
-                    </Link>  
-                    </td>
-                    <td>
-                      <Link to={`/${user._id}`}>
-                      <FaRegEdit size={26}/>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <div>No Users Found</div>
-          )}
+        {/* Pagination */}
+        <div className="md:flex items-center justify-center mt-8 hidden">
+          <Stack spacing={2}>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+            />
+          </Stack>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+     <DeleteUser close={handleModalClose} confirm={handleDeleteConfirm} isOpen={isModalOpen}/>
     </div>
   );
 }

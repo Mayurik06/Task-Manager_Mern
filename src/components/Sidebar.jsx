@@ -1,7 +1,8 @@
 import React from "react";
 import { GoTasklist } from "react-icons/go";
 import { AiOutlineDashboard } from "react-icons/ai";
-import { IoPeople } from "react-icons/io5";
+import { SlPeople } from "react-icons/sl";
+import { FiUserPlus } from "react-icons/fi";
 import { BiTask } from "react-icons/bi";
 import { LiaEnvelopeOpenSolid } from "react-icons/lia";
 import { Link } from "react-router-dom";
@@ -13,7 +14,8 @@ function Sidebar({ children, role }) {
       src: "/admin/dashboard",
       icon: <AiOutlineDashboard />,
     },
-    { title: "Add Employee", src: "/admin/add-user", icon: <IoPeople /> },
+    { title: "Add Employee", src: "/admin/add-user", icon: <FiUserPlus /> },
+    { title: "View Employees", src: "/admin/get-user", icon: <SlPeople /> },
     { title: "Assign Tasks", src: "/admin/assign-task", icon: <BiTask /> },
     {
       title: "Leave Management",
@@ -37,8 +39,8 @@ function Sidebar({ children, role }) {
   const menus = role === "admin" ? AdminMenus : EmployeeMenus;
 
   return (
-    <div className="flex relative">
-      <div className="lg:h-screen lg:w-64 w-full lg:p-5 p-4 lg:pt-8 fixed bottom-0 lg:left-0 lg:top-0 lg:shadow-right shadow-top rounded-lg lg:rounded-none bg-white">
+    <div className="relative">
+      <div className="lg:h-screen lg:w-64 w-full lg:p-5 p-4 lg:pt-8 fixed bottom-0 lg:left-0 lg:top-0 lg:shadow-right shadow-top rounded-lg lg:rounded-none bg-white z-50">
         <div
           className={`lg:flex gap-x-4 items-center justify-start p-2 duration-200 hidden border-b`}
         >
