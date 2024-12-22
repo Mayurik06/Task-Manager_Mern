@@ -55,6 +55,7 @@ const navigate=useNavigate();
           <CgProfile size={26} onClick={toggleMenu} />
 
           {showMenu && (
+
             <div className="absolute flex flex-col right-6 mt-2 bg-white border border-gray-200 rounded shadow-lg z-10 p-2">
               <div className="p-4 text-gray-700">
                 <span className="block font-semibold cursor-pointer">Hey, {username}</span>
@@ -66,6 +67,7 @@ const navigate=useNavigate();
                 Logout
               </button>
             </div>
+           
           )}
         </div>
       </div>

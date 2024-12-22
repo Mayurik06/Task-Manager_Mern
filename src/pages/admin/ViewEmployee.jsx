@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import { IoIosSearch } from "react-icons/io";
 import UserTable from "../../components/UserTable";
 import UserGrid from "../../components/UserGrid";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DeleteUser from "../../components/DeleteUserf";
+import PaginationCom from "../../components/PaginationCom";
 
 function ViewEmployee() {
   const [users, setUsers] = useState([]);
@@ -15,9 +15,16 @@ function ViewEmployee() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [loggedInUserId, setLoggedInUserId] = useState(null);
   const itemsPerPage = 5; // Number of items per page
 
   useEffect(() => {
+    const token = sessionStorage.getItem("authToken"); 
+    if (token) {
+     const decoded = jwtDecode(token);
+      setLoggedInUserId(decoded.id); 
+    }
+
     const getEmployee = async () => {
       try {
         const response = await axios.get("http://localhost:4000/api/get/user");
@@ -42,10 +49,15 @@ function ViewEmployee() {
   const currentUsers = filterUser.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (event, value) => {
-    setCurrentPage(value);
+ setCurrentPage(value);
   };
 
   const handleDeleteClick = (id) => {
+    if (id === loggedInUserId) {
+      toast.error("You cannot delete your own account.");
+      return;
+    }
+
     setSelectedUserId(id);
     setIsModalOpen(true);
   };
@@ -107,13 +119,7 @@ function ViewEmployee() {
 
         {/* Pagination */}
         <div className="md:flex items-center justify-center mt-8 hidden">
-          <Stack spacing={2}>
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-            />
-          </Stack>
+          <PaginationCom totalPage={totalPages} currentPage={currentPage} handleChange={handlePageChange}/>
         </div>
       </div>
 

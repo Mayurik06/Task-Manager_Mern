@@ -24,8 +24,12 @@ function AdminRoutes() {
         return "Leave Management";
       case "/admin/assign-task":
         return "Assign Task";
+      case "/admin/get-user":
+        return "Employees";
+      case "/admin/get-user/:id":
+        return "Update Employee";
       default:
-        return "Page Not Found";
+        return "";
     }
   };
 
@@ -33,17 +37,16 @@ function AdminRoutes() {
   return (
     <Sidebar role="admin">
       <Header heading={heading} />
-     <div className="mt-16 lg:mt-24 mb-28 lg:mb-0">
-     <Routes>
-        <Route path="/dashboard" element={<AdminDashboard />} />
-        <Route path="/add-user" element={<AddUser />} />
-        <Route path="/leave-management" element={<LeaveManagement />} />
-        <Route path="/assign-task" element={<AssignTask />} />
-        <Route path="/get-user" element={<ViewEmployee/>} />
-        <Route path="/get-user/:id" element={<GetEmployeeById/>} />
-
-      </Routes>
-     </div>
+      <div className="mt-16 lg:mt-24 mb-28 lg:mb-0">
+        <Routes>
+          <Route path="/dashboard" element={<AdminDashboard />} />
+          <Route path="/add-user" element={<AddUser />} />
+          <Route path="/leave-management" element={<LeaveManagement />} />
+          <Route path="/assign-task" element={<AssignTask />} />
+          <Route path="/get-user" element={<ViewEmployee />} />
+          <Route path="/get-user/:id" element={<GetEmployeeById />} />
+        </Routes>
+      </div>
     </Sidebar>
   );
 }

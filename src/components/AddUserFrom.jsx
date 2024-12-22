@@ -1,44 +1,13 @@
-import React, { useState } from "react";
-import axios from "axios";
+
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function AddUserForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    aliasEmail: "",
-    email: "",
-    role: "",
-    position: "",
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post("http://localhost:4000/api/create/user", formData);
-      toast.success(response.data.message || "User created successfully");
-      setFormData({
-        name: "",
-        aliasEmail: "",
-        email: "",
-        role: "",
-        position: "",
-      });
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "Failed to create user";
-      toast.error(errorMessage);
-    }
-  };
+function AddUserForm({submit,change,value,btnVal}) {
+ 
 
   return (
     <div className="lg:w-fit pl-8 pr-8 pt-8 pb-10 shadow-all bg-white rounded-md">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={submit} className="flex flex-col gap-4">
         <div className="flex gap-4 flex-col lg:flex-row">
           <div className="flex flex-col gap-4">
             <label htmlFor="name" className="font-semibold">
@@ -47,8 +16,8 @@ function AddUserForm() {
             <input
               type="text"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
+              value={value.name}
+              onChange={change}
               placeholder="Name"
               className="border p-2 outline-none lg:w-[500px] w-full"
             />
@@ -60,8 +29,8 @@ function AddUserForm() {
             <input
               type="text"
               name="position"
-              value={formData.position}
-              onChange={handleChange}
+              value={value.position}
+              onChange={change}
               placeholder="Position of the Employee"
               className="border p-2 outline-none lg:w-[500px] w-full"
             />
@@ -76,8 +45,8 @@ function AddUserForm() {
             <input
               type="text"
               name="aliasEmail"
-              value={formData.aliasEmail}
-              onChange={handleChange}
+              value={value.aliasEmail}
+              onChange={change}
               placeholder="m@example.com"
               className="border p-2 outline-none lg:w-[500px] w-full"
             />
@@ -92,8 +61,8 @@ function AddUserForm() {
             <input
               type="text"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={value.email}
+              onChange={change}
               placeholder="m@gmail.com"
               className="border p-2 outline-none lg:w-[500px] w-full"
             />
@@ -106,8 +75,8 @@ function AddUserForm() {
           </label>
           <select
             name="role"
-            value={formData.role}
-            onChange={handleChange}
+            value={value.role}
+            onChange={change}
             className="border p-2 outline-none lg:w-[300px] w-full"
           >
             <option value="" disabled>
@@ -121,7 +90,7 @@ function AddUserForm() {
           type="submit"
           className="bg-black text-white px-4 py-2 font-bold rounded-sm mt-8"
         >
-          Add Employee
+          {btnVal}
         </button>
       </form>
       <ToastContainer />
